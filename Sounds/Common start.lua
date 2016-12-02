@@ -1,0 +1,1 @@
+return loadOsuSound(click-short);

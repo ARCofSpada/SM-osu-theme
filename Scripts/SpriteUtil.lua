@@ -14,3 +14,12 @@ function loadOsuGraphic(fileName)
             return THEME:GetPathG("", "_fallback/"..fileName..".png")
         end;
 end
+
+function loadOsuSound(fileName)
+    --local path = THEME:GetCurrentThemeDirectory().."Graphics/_skin/"
+    if FILEMAN:DoesFileExist(THEME:GetPathG("", "_skin/"..fileName) then --Would it kill them to create a sounds folder or something? Fuck osu
+        return THEME:GetPathG("", "_skin/"..fileName)
+    else
+        return THEME:GetPathG("", "_fallback/"..fileName)
+    end;
+end;
