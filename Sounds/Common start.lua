@@ -1,1 +1,1 @@
-return loadOsuSound(click-short);
+return loadOsuSound("click-short");
