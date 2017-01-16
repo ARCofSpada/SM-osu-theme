@@ -12,7 +12,7 @@ local function getSongWithPreview()
     local songPath = "";
     local attempts = 0;
     
-    while (HasPreview == false and attempts < 25)do
+    while (HasPreview == false and attempts < 25) do
         local song = SONGMAN:GetRandomSong();
         songPath = song:GetPreviewMusicPath();
         if songPath ~= "" then
@@ -29,17 +29,27 @@ local songPreview = getSongWithPreview();
 --SCREENMAN:SystemMessage(songPreview);
 
 local function playSample()
-    local song = SONGMAN:GetRandomSong();
-    local songSample = song:GetSampleStart();
-    --[[if songSample == 0 then
-        getSongWithPreview();
-    else
-        local timingData = song:GetTimingData();
-    end;]]
-    if song:GetMusicPath() ~= nil then
+    local song;
+    local songSample;
+    local hasSample = false
+    local attempts = 0
+    
+    while (hasSample == false and attempts < 25) do
+        song = SONGMAN:GetRandomSong();
+        songSample = song:GetSampleStart();
+        if song:GetSampleLength() > 0 and song:GetMusicPath() ~= nil then
+            hasSample = true;
+        else
+            attempts = attempts + 1;
+        end
+    end;
+    
+    SCREENMAN:SystemMessage(tostring(attempts).." "..song:GetSampleLength().." "..song:GetMusicPath());
+    if songSample and song:GetMusicPath() ~= nil then
         --SCREENMAN:SystemMessage(song:GetMusicPath());
-        SCREENMAN:SystemMessage(song:GetSampleLength());
-        SOUND:PlayMusicPart(song:GetMusicPath(),songSample,song:GetSampleLength(),0,0,false,false,true)
+        --SCREENMAN:SystemMessage(song:GetSampleLength());
+        SOUND:PlayMusicPart(song:GetMusicPath(),songSample,song:GetLastSecond()-songSample,0,0,false,false,true)
+        --TODO: Play next song when it's done.
     end;
 end;
 
@@ -51,11 +61,16 @@ return Def.ActorFrame{
         InitCommand=cmd(Center;scaletocover,0,0,1280,720);
     
     };
-    LoadActor(songPreview)..{
+    --[[LoadActor(songPreview)..{
         OnCommand=cmd(play);
         OffCommand=cmd(stop);
+    };]]
+    
+    Def.Actor{
+        OnCommand=function(self) playSample() end;
     };
     
+    --Test
     LoadActor(loadOsuSound("click-short"))..{
         OnCommand=cmd(play);
     };
@@ -65,7 +80,7 @@ return Def.ActorFrame{
             self:setsize(1280,20);
             self:Center();
         end;
-        --OnCommand=cmd(effectclock,"beat";diffuseramp;effectcolor1,color(".4,.4,.4,1");effectcolor2,color("1,1,1,1"));
+        OnCommand=cmd(effectclock,"beat";diffuseramp;effectcolor1,color(".4,.4,.4,1");effectcolor2,color("1,1,1,1"));
     };
     
 

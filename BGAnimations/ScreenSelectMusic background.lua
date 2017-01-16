@@ -1,7 +1,7 @@
 local t = Def.ActorFrame{
 
     LoadActor(THEME:GetPathG("","common fallback background"))..{
-    InitCommand=cmd(scaletocover,0,0,1280,720);
+    --InitCommand=cmd(scaletocover,0,0,1280,720);
     
     };
     
